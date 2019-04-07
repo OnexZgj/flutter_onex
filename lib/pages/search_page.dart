@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class SearchPage extends StatefulWidget{
 
   @override
-  _homePage createState() => _homePage();
+  _searchPage createState() => _searchPage();
 
 }
 
-class _homePage extends State<SearchPage>{
+class _searchPage extends State<SearchPage>{
 
   
   @override

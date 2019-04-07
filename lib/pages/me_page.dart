@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class MePage extends StatefulWidget{
 
   @override
-  _homePage createState() => _homePage();
+  _mePage createState() => _mePage();
 
 }
 
-class _homePage extends State<MePage>{
+class _mePage extends State<MePage>{
 
   
   @override

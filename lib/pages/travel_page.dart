@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 class TravelPage extends StatefulWidget{
 
   @override
-  _homePage createState() => _homePage();
+  _travelPage createState() => _travelPage();
 
 }
 
-class _homePage extends State<TravelPage>{
-
+class _travelPage extends State<TravelPage>{
 
   @override
   Widget build(BuildContext context) {
