@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_onex/manager/api_manager.dart';
+import 'package:flutter_onex/model/HomeBanner.dart';
 
 const APPBAR_SCROLL_MAX_OFFECT = 100;
 
@@ -14,6 +17,10 @@ class _homePage extends State<HomePage> {
     'https://weiliicimg9.pstatp.com/weili/l/363357239782146052.jpg',
     'https://icweiliimg1.pstatp.com/weili/l/57428205291836382.jpg',
   ];
+
+  // 首页banner列表
+  List<HomeBannerItem> banners = List();
+
 
   double _appBarAlpha = 0;
 
@@ -52,14 +59,15 @@ class _homePage extends State<HomePage> {
                     Container(
                       height: 180,
                       child: Swiper(
-                        itemCount: _imageUrl.length,
+                        itemCount: banners.length,
                         autoplay: true,
                         pagination: new SwiperPagination(),
                         viewportFraction: 0.8,
                         scale: 0.9,
                         itemBuilder: (BuildContext context, int index) {
                           return new Image.network(
-                            _imageUrl[index],
+//                            _imageUrl[index],
+                            banners[index].imagePath,
                             fit: BoxFit.fill,
                           );
                         },
@@ -89,4 +97,27 @@ class _homePage extends State<HomePage> {
       ],
     ));
   }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _getBanner();
+
+  }
+
+  void _getBanner() async {
+    /// 获取首页banner数据
+      Response response = await ApiManager().getHomeBanner();
+      var homeBannerBean = HomeBanner.fromJson(response.data);
+      setState(() {
+        banners.clear();
+        banners.addAll(homeBannerBean.data);
+      });
+
+  }
+
+
+
 }
+

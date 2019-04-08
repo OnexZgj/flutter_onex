@@ -16,7 +16,7 @@ class _tabNavigator extends State<TabNavigator> {
   final default_color = Colors.grey;
   final select_color = Colors.lightBlue;
 
-  int _current_index = 1;
+  int _current_index = 0;
 
   @override
   Widget build(BuildContext context) {

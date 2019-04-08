@@ -8,7 +8,7 @@ class ApiManager {
 
   ApiManager._internal() {
     var options = BaseOptions(
-        baseUrl: "http://gank.io/api/data/福利/10",
+        baseUrl: "https://www.wanandroid.com/",
         connectTimeout: 10000,
         receiveTimeout: 3000);
     _dio = Dio(options);
@@ -84,14 +84,6 @@ class ApiManager {
   }
 
 
-  Future<Response> getWelfare(int page) async {
-    try {
-      Response response = await _dio.get("/${page}");
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
 
 
 }
