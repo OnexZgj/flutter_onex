@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onex/model/HomeArticle.dart';
+import 'package:flutter_onex/model/WechartItem.dart';
 import 'package:flutter_onex/pages/webview_page.dart';
 import 'package:flutter_onex/widget/ProgressView.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -9,97 +10,40 @@ import 'package:flutter_onex/model/HomeBanner.dart';
 
 const APPBAR_SCROLL_MAX_OFFECT = 100;
 
-class HomePage extends StatefulWidget {
+class WeChatArticlePage extends StatefulWidget {
+
+  const WeChatArticlePage({ Key key, this.choiceId }) : super(key: key);
+
+  final int choiceId;
+
   @override
-  _homePage createState() => _homePage();
+  _wechatPage createState() => _wechatPage();
 }
 
-class _homePage extends State<HomePage> {
-
-  // 首页banner列表
-  List<HomeBannerItem> banners = List();
-
-  // 首页文章列表
-  List<Article> articles = List();
-
-  double _appBarAlpha = 0;
+class _wechatPage extends State<WeChatArticlePage> {
+  List<WechatItem> articles = List();
 
   int _index = 0;
 
-  ScrollController _loadmore = new ScrollController();
 
-  _onScroll(offect) {
-    _appBarAlpha = offect / APPBAR_SCROLL_MAX_OFFECT;
-    if (_appBarAlpha < 0) {
-      _appBarAlpha = 0;
-    } else if (_appBarAlpha > 1) {
-      _appBarAlpha = 1;
-    }
-    setState(() {
-      _appBarAlpha = _appBarAlpha;
-    });
-    print(offect);
-  }
+  ScrollController _loadmore = new ScrollController();
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-
-
     Widget listView = ListView.builder(
         controller: _loadmore,
-        itemCount: articles.length + 1,
+        itemCount: articles.length,
         itemBuilder: (context, index) {
-          if (index == 0) {
-            return createBannerItem();
-          } else {
-            if (index - 1 < articles.length) {
-              return createHomeArticleItem(articles[index - 1]);
-            } else {
-              return Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    "正在加载中...",
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey),
-                  ));
-            }
-          }
+          return createHomeArticleItem(articles[index]);
         });
 
     return new Scaffold(
-        //进行适配iPhoneX和刘海屏的操作，沉浸式状态栏
-        body: Stack(
-      children: <Widget>[
-        MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: NotificationListener(
-              //监听滚动，只有监听listview的滚动
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollUpdateNotification &&
-                    scrollNotification.depth == 0) {
-                  _onScroll(scrollNotification.metrics.pixels);
-                }
-              },
-              child: articles.length == 0 ? new ProgressView() : listView,
-            )),
-        Opacity(
-          opacity: _appBarAlpha,
-          child: Container(
-            height: 80,
-            decoration: BoxDecoration(color: Colors.white),
-            child: new Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text("首页"),
-              ),
-            ),
-          ),
-        )
-      ],
-    ));
+        body: Stack(children: <Widget>[
+      articles.length == 0 ? new ProgressView() : listView,
+    ]));
   }
 
   @override
@@ -111,30 +55,18 @@ class _homePage extends State<HomePage> {
       // 小于50px时，触发上拉加载；
       if (position.maxScrollExtent - position.pixels < 50) {
         this._index++;
-        this._getHomeArticle(_index);
+        this._getWechatArticle(_index);
       }
     });
 
-    _getBanner();
-
-    _getHomeArticle(_index);
+    _getWechatArticle(_index);
   }
 
-  void _getBanner() async {
-    /// 获取首页banner数据
-    Response response = await ApiManager().getHomeBanner();
-    var homeBannerBean = HomeBanner.fromJson(response.data);
+  void _getWechatArticle(int index) async {
+    Response response = await ApiManager().getWechatArticle(widget.choiceId, index);
+    var article = WechatArticle.fromJson(response.data);
     setState(() {
-      banners.clear();
-      banners.addAll(homeBannerBean.data);
-    });
-  }
-
-  void _getHomeArticle(int index) async {
-    Response response = await ApiManager().getHomeArticle(index);
-    var homeArticle = HomeArticleBean.fromJson(response.data);
-    setState(() {
-      articles.addAll(homeArticle.data.datas);
+      articles.addAll(article.data.datas);
     });
   }
 
@@ -144,7 +76,7 @@ class _homePage extends State<HomePage> {
     super.dispose();
   }
 
-  Widget createHomeArticleItem(Article article) {
+  Widget createHomeArticleItem(WechatItem article) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -219,36 +151,6 @@ class _homePage extends State<HomePage> {
               ],
             ),
           )),
-    );
-  }
-
-  Widget createBannerItem() {
-    return new Container(
-      height: 180,
-      child: Swiper(
-        itemCount: banners.length,
-        autoplay: true,
-        pagination: new SwiperPagination(),
-        viewportFraction: 0.8,
-        scale: 0.9,
-        itemBuilder: (BuildContext context, int index) {
-          return new InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (context) => new WebViewPage(
-                      title: banners[index].title, url: banners[index].url),
-                ),
-              );
-            },
-            child: new Image.network(
-              banners[index].imagePath,
-              fit: BoxFit.fill,
-            ),
-          );
-        },
-      ),
     );
   }
 }
