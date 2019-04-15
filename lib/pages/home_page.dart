@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _homePage extends State<HomePage> {
-
   // 首页banner列表
   List<HomeBannerItem> banners = List();
 
@@ -38,7 +37,7 @@ class _homePage extends State<HomePage> {
     setState(() {
       _appBarAlpha = _appBarAlpha;
     });
-    print(offect);
+//    print(offect);
   }
 
   @override
@@ -46,8 +45,6 @@ class _homePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     Widget listView = ListView.builder(
         controller: _loadmore,
         itemCount: articles.length + 1,
@@ -92,8 +89,25 @@ class _homePage extends State<HomePage> {
             decoration: BoxDecoration(color: Colors.white),
             child: new Center(
               child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text("首页"),
+                padding: EdgeInsets.all(20),
+                child: new TextField(
+                  autofocus: false,
+                  enabled: false,
+                  decoration: new InputDecoration(
+                    labelText: '搜索',
+                    icon: Icon(Icons.search),
+                    enabledBorder: OutlineInputBorder(
+                      /*边角*/
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30), //边角为30
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.lightBlue, //边线颜色为黄色
+                        width: 2, //边线宽度为2
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
