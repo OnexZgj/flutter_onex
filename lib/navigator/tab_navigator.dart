@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_onex/pages/home_page.dart';
 import 'package:flutter_onex/pages/me_page.dart';
 import 'package:flutter_onex/pages/search_page.dart';
-import 'package:flutter_onex/pages/travel_page.dart';
+import 'package:flutter_onex/pages/wechat_page.dart';
 import 'package:flutter_onex/pages/welfare_page.dart';
 
 class TabNavigator extends StatefulWidget {
@@ -20,13 +20,10 @@ class _tabNavigator extends State<TabNavigator> {
 
   @override
   Widget build(BuildContext context) {
-
-
     _pageChange(int index) {
-      if(_current_index!=index){
+      if (_current_index != index) {
         setState(() {
-          _current_index=index;
-
+          _current_index = index;
         });
       }
     }
@@ -37,8 +34,7 @@ class _tabNavigator extends State<TabNavigator> {
         onPageChanged: _pageChange,
         children: <Widget>[
           HomePage(),
-          SearchPage(),
-          TravelPage(),
+          WechatPageC(),
           MePage(),
           WelfarePage(),
         ],
@@ -78,24 +74,9 @@ class _tabNavigator extends State<TabNavigator> {
                   color: select_color,
                 ),
                 title: Text(
-                  "旅行",
+                  "微信",
                   style: TextStyle(
                     color: _current_index != 1 ? default_color : select_color,
-                  ),
-                )),
-            new BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.search,
-                  color: default_color,
-                ),
-                activeIcon: Icon(
-                  Icons.search,
-                  color: select_color,
-                ),
-                title: Text(
-                  "搜索",
-                  style: TextStyle(
-                    color: _current_index != 2 ? default_color : select_color,
                   ),
                 )),
             new BottomNavigationBarItem(
@@ -113,8 +94,6 @@ class _tabNavigator extends State<TabNavigator> {
                     color: _current_index != 3 ? default_color : select_color,
                   ),
                 )),
-
-
             new BottomNavigationBarItem(
                 icon: Icon(
                   Icons.audiotrack,
@@ -133,6 +112,4 @@ class _tabNavigator extends State<TabNavigator> {
           ]),
     );
   }
-
-
 }

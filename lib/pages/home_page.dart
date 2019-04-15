@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onex/model/HomeArticle.dart';
+import 'package:flutter_onex/pages/search_page.dart';
 import 'package:flutter_onex/pages/webview_page.dart';
 import 'package:flutter_onex/widget/ProgressView.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -86,29 +87,65 @@ class _homePage extends State<HomePage> {
           opacity: _appBarAlpha,
           child: Container(
             height: 80,
-            decoration: BoxDecoration(color: Colors.white),
+//            decoration: BoxDecoration(color: Colors.grey),
+            decoration: BoxDecoration(
+              color: Colors.lightBlue,
+//              backgroundBlendMode: BlendMode.exclusion,
+//              gradient: LinearGradient(
+//                colors: const [
+//                  Colors.purple,
+//                  Colors.lightBlue,
+//                ],
+//              ),
+            ),
             child: new Center(
               child: Padding(
-                padding: EdgeInsets.all(20),
-                child: new TextField(
-                  autofocus: false,
-                  enabled: false,
-                  decoration: new InputDecoration(
-                    labelText: '搜索',
-                    icon: Icon(Icons.search),
-                    enabledBorder: OutlineInputBorder(
-                      /*边角*/
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30), //边角为30
-                      ),
-                      borderSide: BorderSide(
-                        color: Colors.lightBlue, //边线颜色为黄色
-                        width: 2, //边线宽度为2
-                      ),
+//                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: new GestureDetector(
+                    onTap: _toSearchPage,
+                    child: new Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.search,
+                          color: Colors.blueAccent,
+                          size: 18,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 30),
+                          child: Text(
+                            "搜索",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                decorationStyle: TextDecorationStyle.solid),
+                          ),
+                        ),
+                      ],
                     ),
+                  )
+
+//                IconButton(
+//                    icon: Icon(Icons.search), onPressed: _toSearchPage),
+//                child: new TextField(
+//                  autofocus: false,
+//                  onTap: _toSearchPage,
+//                  decoration: new InputDecoration(
+//                    labelText: '搜索',
+//                    icon: Icon(Icons.search),
+//                    enabledBorder: OutlineInputBorder(
+//                      /*边角*/
+//                      borderRadius: BorderRadius.all(
+//                        Radius.circular(30), //边角为30
+//                      ),
+//                      borderSide: BorderSide(
+//                        color: Colors.lightBlue, //边线颜色为黄色
+//                        width: 2, //边线宽度为2
+//                      ),
+//                    ),
+//                  ),
+//                ),
                   ),
-                ),
-              ),
             ),
           ),
         )
@@ -263,6 +300,13 @@ class _homePage extends State<HomePage> {
           );
         },
       ),
+    );
+  }
+
+  _toSearchPage() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new SearchPage()),
     );
   }
 }

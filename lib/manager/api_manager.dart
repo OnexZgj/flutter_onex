@@ -56,7 +56,8 @@ class ApiManager {
   /// 获取项目列表
   Future<Response> getProjectList(int cid, int page) async {
     try {
-      Response response = await _dio.get("project/list/${page}/json", queryParameters: {"cid": "${cid}"});
+      Response response = await _dio
+          .get("project/list/${page}/json", queryParameters: {"cid": "${cid}"});
       return response;
     } catch (e) {
       return null;
@@ -83,7 +84,13 @@ class ApiManager {
     }
   }
 
-
-
-
+  ///搜索关键字
+  Future<Response> searchArticle(int page) async {
+    try {
+      Response response = await _dio.get("article/query/${page}/json");
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 }
