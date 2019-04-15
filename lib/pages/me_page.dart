@@ -37,11 +37,11 @@ class MePage extends StatefulWidget {
   _mePage createState() => _mePage();
 }
 
-class _mePage extends State<MePage> {
+class _mePage extends State<MePage>
+    with SingleTickerProviderStateMixin {
   List<ProjectItem> articles = List();
 
   List<ProjectTabItem> myTabs = List();
-
 
 
   TabController _tabController;
@@ -52,10 +52,18 @@ class _mePage extends State<MePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getProjectTab();
+    _tabController = TabController(vsync: this, length: myTabs.length);
 
+  }
+
+
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
 
@@ -114,7 +122,7 @@ class _mePage extends State<MePage> {
 
   void _getProjectTab() async{
 
-    Response response = await ApiManager().getHomeBanner();
+    Response response = await ApiManager().getProjectClassify();
     var projectTab = ProjectTab.fromJson(response.data);
     setState(() {
       myTabs.clear();
