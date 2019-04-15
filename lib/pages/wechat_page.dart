@@ -6,10 +6,10 @@ import 'package:flutter_onex/widget/ProgressView.dart';
 
 class WechatPageC extends StatefulWidget {
   @override
-  _searchPage createState() => _searchPage();
+  _wechatPage createState() => _wechatPage();
 }
 
-class _searchPage extends State<WechatPageC>
+class _wechatPage extends State<WechatPageC>
     with SingleTickerProviderStateMixin {
 
   final List<Choice> myTabs = const <Choice>[
@@ -46,21 +46,12 @@ class _searchPage extends State<WechatPageC>
       ),
       body: TabBarView(
         controller: _tabController,
-//        children: myTabs.map((Tab tab) {
-//          return Center(child: Text(tab.text));
-//        }).toList(),
-//        children: <Widget>[
-//          new WeChatArticlePage(),
-//          new WeChatArticlePage(),
-//        ],
         children: myTabs.map((Choice choice) {
           return new Padding(
             padding: const EdgeInsets.all(16.0),
             child: new WeChatArticlePage(choiceId : choice.id),
           );
         }).toList(),
-
-
       ),
     );
   }

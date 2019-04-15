@@ -24,14 +24,11 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_onex/model/HomeArticle.dart';
-import 'package:flutter_onex/model/ProjectItem.dart';
-import 'package:flutter_onex/pages/search_page.dart';
-import 'package:flutter_onex/pages/webview_page.dart';
-import 'package:flutter_onex/widget/ProgressView.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_onex/manager/api_manager.dart';
-import 'package:flutter_onex/model/HomeBanner.dart';
+import 'package:flutter_onex/model/ProjectItem.dart';
+import 'package:flutter_onex/model/ProjectTab.dart';
+import 'package:flutter_onex/pages/ProjectArticleListView.dart';
+
 
 const APPBAR_SCROLL_MAX_OFFECT = 100;
 
@@ -43,153 +40,90 @@ class MePage extends StatefulWidget {
 class _mePage extends State<MePage> {
   List<ProjectItem> articles = List();
 
+  List<ProjectTabItem> myTabs = List();
+
+
+
+  TabController _tabController;
+
   int _index = 1;
 
   ScrollController _loadmore = new ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getProjectTab();
+
+  }
+
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    Widget listView = ListView.builder(
-        controller: _loadmore,
-        itemCount: articles.length + 1,
-        itemBuilder: (context, index) {
-          if (index < articles.length) {
-            return createHomeArticleItem(articles[index]);
-          }
-        });
 
-    return new Scaffold(
-        //进行适配iPhoneX和刘海屏的操作，沉浸式状态栏
-        appBar: new AppBar(
-          title: Text(
-            "项目",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.lightBlue,
+      return Scaffold(
+      appBar: AppBar(
+        title: Text("微信公众号"),
+        bottom: TabBar(
+          isScrollable:true,
+          controller: _tabController,
+          tabs: myTabs.map((ProjectTabItem item) {
+            return new Tab(
+              text: item.name,
+              icon: new Icon(Icons.ac_unit),
+            );
+          }).toList(),
         ),
-        body: Stack(
-          children: <Widget>[
-            MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: articles.length == 0 ? new ProgressView() : listView,
-            ),
-          ],
-        ));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadmore.addListener(() {
-      var position = _loadmore.position;
-      // 小于50px时，触发上拉加载；
-      if (position.maxScrollExtent - position.pixels < 50) {
-        this._index++;
-        this._getProjectArticle(_index);
-      }
-    });
-
-    _getProjectArticle(_index);
-  }
-
-  void _getProjectArticle(int index) async {
-    Response response = await ApiManager().getProjectList(294, index);
-    var projectArticle = ProjectData.fromJson(response.data);
-    setState(() {
-      articles.addAll(projectArticle.data.datas);
-    });
-  }
-
-  @override
-  void dispose() {
-    _loadmore.dispose();
-    super.dispose();
-  }
-
-  Widget createHomeArticleItem(ProjectItem article) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (ctx) =>
-                    WebViewPage(title: article.title, url: article.link)));
-      },
-      child: Card(
-          margin: EdgeInsets.fromLTRB(2, 5, 2, 0),
-          child: Container(
-            padding: EdgeInsets.fromLTRB(18, 10, 18, 10),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: 180,
-                  child: Image.network(article.envelopePic),
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.child_care,
-                      color: Colors.blueAccent,
-                      size: 18,
-                    ),
-                    Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            article.author,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.blueAccent),
-                          ),
-                        ))
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Text(
-                      article.title
-                          .replaceAll("&rdquo;", "")
-                          .replaceAll("&ldquo;", ""),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.black, fontSize: 16.0),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.access_time,
-                      color: Colors.grey,
-                      size: 15,
-                    ),
-                    Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 8),
-                          child: Text(
-                            article.niceDate,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ))
-                  ],
-                )
-              ],
-            ),
-          )),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: myTabs.map((ProjectTabItem item) {
+          return new Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: new ProjectArticlePage(choiceId : item.id),
+          );
+        }).toList(),
+      ),
     );
+
+
+
+//    return new Scaffold(
+//        //进行适配iPhoneX和刘海屏的操作，沉浸式状态栏
+//        appBar: new AppBar(
+//          title: Text(
+//            "项目",
+//            style: TextStyle(color: Colors.white),
+//          ),
+//          backgroundColor: Colors.lightBlue,
+//        ),
+//        body: Stack(
+//          children: <Widget>[
+//            MediaQuery.removePadding(
+//              context: context,
+//              removeTop: true,
+//              child: articles.length == 0 ? new ProgressView() : listView,
+//            ),
+//          ],
+//        ));
   }
+
+  void _getProjectTab() async{
+
+    Response response = await ApiManager().getHomeBanner();
+    var projectTab = ProjectTab.fromJson(response.data);
+    setState(() {
+      myTabs.clear();
+      myTabs.addAll(projectTab.data);
+    });
+
+  }
+
+
+
+
 }
