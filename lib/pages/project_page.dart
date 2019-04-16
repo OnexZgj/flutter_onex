@@ -28,37 +28,27 @@ import 'package:flutter_onex/manager/api_manager.dart';
 import 'package:flutter_onex/model/ProjectItem.dart';
 import 'package:flutter_onex/model/ProjectTab.dart';
 import 'package:flutter_onex/pages/ProjectArticleListView.dart';
-
+import 'package:flutter_onex/widget/ProgressView.dart';
 
 const APPBAR_SCROLL_MAX_OFFECT = 100;
 
-class MePage extends StatefulWidget {
+class ProjectPage extends StatefulWidget {
   @override
-  _mePage createState() => _mePage();
+  _projectPage createState() => _projectPage();
 }
 
-class _mePage extends State<MePage>
-    with SingleTickerProviderStateMixin {
+class _projectPage extends State<ProjectPage> with SingleTickerProviderStateMixin {
   List<ProjectItem> articles = List();
 
-  List<ProjectTabItem> myTabs = List();
-
+  final List<ProjectTabItem> myTabs = List();
 
   TabController _tabController;
-
-  int _index = 1;
-
-  ScrollController _loadmore = new ScrollController();
 
   @override
   void initState() {
     super.initState();
     _getProjectTab();
-    _tabController = TabController(vsync: this, length: myTabs.length);
-
   }
-
-
 
   @override
   void dispose() {
@@ -66,39 +56,28 @@ class _mePage extends State<MePage>
     super.dispose();
   }
 
-
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-
-      return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("微信公众号"),
-        bottom: TabBar(
-          isScrollable:true,
-          controller: _tabController,
-          tabs: myTabs.map((ProjectTabItem item) {
-            return new Tab(
-              text: item.name,
-              icon: new Icon(Icons.ac_unit),
-            );
-          }).toList(),
-        ),
+        title: Text("完整项目"),
+        bottom: _buildBottomBar(),
       ),
       body: TabBarView(
         controller: _tabController,
         children: myTabs.map((ProjectTabItem item) {
           return new Padding(
             padding: const EdgeInsets.all(16.0),
-            child: new ProjectArticlePage(choiceId : item.id),
+            child: myTabs.length == 0
+                ? new ProgressView()
+                : new ProjectArticlePage(choiceId: item.id),
           );
         }).toList(),
       ),
     );
-
-
 
 //    return new Scaffold(
 //        //进行适配iPhoneX和刘海屏的操作，沉浸式状态栏
@@ -120,18 +99,38 @@ class _mePage extends State<MePage>
 //        ));
   }
 
-  void _getProjectTab() async{
-
+  void _getProjectTab() async {
     Response response = await ApiManager().getProjectClassify();
     var projectTab = ProjectTab.fromJson(response.data);
     setState(() {
-      myTabs.clear();
       myTabs.addAll(projectTab.data);
     });
-
   }
 
+  _buildBottomBar() {
+    if (myTabs.length <= 0) {
+      return Text('正在加载标签...');
+    } else {
+      if (_tabController == null) {
+        _tabController = TabController(vsync: this, length: myTabs.length);
+      }
 
+      return TabBar(
+        isScrollable: true,
+        controller: _tabController,
+        tabs: myTabs.map((ProjectTabItem choice) {
+          return new Tab(
+            text: choice.name,
+            icon: new Icon(Icons.language),
+          );
+        }).toList(),
+      );
+    }
+  }
+}
 
+class Tabx {
+  const Tabx({this.title});
 
+  final String title;
 }

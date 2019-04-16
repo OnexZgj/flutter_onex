@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onex/pages/home_page.dart';
-import 'package:flutter_onex/pages/me_page.dart';
-import 'package:flutter_onex/pages/search_page.dart';
+import 'package:flutter_onex/pages/project_page.dart';
 import 'package:flutter_onex/pages/wechat_page.dart';
 import 'package:flutter_onex/pages/welfare_page.dart';
 
@@ -35,7 +34,7 @@ class _tabNavigator extends State<TabNavigator> {
         children: <Widget>[
           HomePage(),
           WechatPageC(),
-          MePage(),
+          ProjectPage(),
           WelfarePage(),
         ],
       ),
@@ -89,9 +88,9 @@ class _tabNavigator extends State<TabNavigator> {
                   color: select_color,
                 ),
                 title: Text(
-                  "我",
+                  "项目",
                   style: TextStyle(
-                    color: _current_index != 3 ? default_color : select_color,
+                    color: _current_index != 2 ? default_color : select_color,
                   ),
                 )),
             new BottomNavigationBarItem(
@@ -104,9 +103,9 @@ class _tabNavigator extends State<TabNavigator> {
                   color: select_color,
                 ),
                 title: Text(
-                  "福利",
+                  "妹子",
                   style: TextStyle(
-                    color: _current_index != 4 ? default_color : select_color,
+                    color: _current_index != 3 ? default_color : select_color,
                   ),
                 )),
           ]),

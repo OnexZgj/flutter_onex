@@ -16,10 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _homePage extends State<HomePage> {
-  // 首页banner列表
   List<HomeBannerItem> banners = List();
 
-  // 首页文章列表
   List<Article> articles = List();
 
   double _appBarAlpha = 0;
@@ -38,7 +36,6 @@ class _homePage extends State<HomePage> {
     setState(() {
       _appBarAlpha = _appBarAlpha;
     });
-//    print(offect);
   }
 
   @override
@@ -87,16 +84,8 @@ class _homePage extends State<HomePage> {
           opacity: _appBarAlpha,
           child: Container(
             height: 80,
-//            decoration: BoxDecoration(color: Colors.grey),
             decoration: BoxDecoration(
               color: Colors.lightBlue,
-//              backgroundBlendMode: BlendMode.exclusion,
-//              gradient: LinearGradient(
-//                colors: const [
-//                  Colors.purple,
-//                  Colors.lightBlue,
-//                ],
-//              ),
             ),
             child: new Center(
               child: Padding(
@@ -123,29 +112,7 @@ class _homePage extends State<HomePage> {
                         ),
                       ],
                     ),
-                  )
-
-//                IconButton(
-//                    icon: Icon(Icons.search), onPressed: _toSearchPage),
-//                child: new TextField(
-//                  autofocus: false,
-//                  onTap: _toSearchPage,
-//                  decoration: new InputDecoration(
-//                    labelText: '搜索',
-//                    icon: Icon(Icons.search),
-//                    enabledBorder: OutlineInputBorder(
-//                      /*边角*/
-//                      borderRadius: BorderRadius.all(
-//                        Radius.circular(30), //边角为30
-//                      ),
-//                      borderSide: BorderSide(
-//                        color: Colors.lightBlue, //边线颜色为黄色
-//                        width: 2, //边线宽度为2
-//                      ),
-//                    ),
-//                  ),
-//                ),
-                  ),
+                  )),
             ),
           ),
         )

@@ -1,82 +1,35 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_onex/manager/api_manager.dart';
-import 'package:flutter_onex/model/SearchBean.dart';
+import 'package:flutter_onex/model/HomeArticle.dart';
+import 'package:flutter_onex/model/WechartItem.dart';
 import 'package:flutter_onex/pages/webview_page.dart';
-import 'package:flutter_onex/widget/ClearableInputField.dart';
 import 'package:flutter_onex/widget/ProgressView.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_onex/manager/api_manager.dart';
+import 'package:flutter_onex/model/HomeBanner.dart';
 
-/*
-*  搜索页
-*/
-class SearchPage extends StatefulWidget {
+
+class SearchArticlePage extends StatefulWidget {
+  String searchKey;
+
+  SearchArticlePage({Key key, this.searchKey}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    return new Search();
-  }
+  _searchPage createState() => _searchPage();
 }
 
-class Search extends State<SearchPage> {
-  var _key = '';
+class _searchPage extends State<SearchArticlePage> {
   List<Article> articles = List();
 
   int _index = 0;
-
-  var _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppbar(context),
-      body: creteBody(context),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    _loadmore.dispose();
-    super.dispose();
-  }
-
-  AppBar _buildAppbar(BuildContext context) {
-    var originTheme = Theme.of(context);
-    return AppBar(
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.white,
-          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () {
-            Navigator.maybePop(context);
-          }),
-      title: Theme(
-          data: originTheme.copyWith(
-            hintColor: Colors.white,
-            textTheme: TextTheme(subhead: TextStyle(color: Colors.white)),
-          ),
-          child: ClearableInputField(
-            hintTxt: '搜索的内容',
-            controller: _controller,
-            border: InputBorder.none,
-            onchange: (str) {
-              setState(() {
-                _key = str;
-                _getSearchArticle(_index, _key);
-              });
-            },
-          )),
-    );
-  }
-
-
 
   ScrollController _loadmore = new ScrollController();
 
   @override
   bool get wantKeepAlive => true;
 
-  Widget creteBody(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     Widget listView = ListView.builder(
         controller: _loadmore,
         itemCount: articles.length,
@@ -86,7 +39,7 @@ class Search extends State<SearchPage> {
 
     return new Scaffold(
         body: Stack(children: <Widget>[
-        articles.length == 0 ? new Text("没有数据") : listView,
+      articles.length == 0 ? new ProgressView() : listView,
     ]));
   }
 
@@ -99,21 +52,28 @@ class Search extends State<SearchPage> {
       // 小于50px时，触发上拉加载；
       if (position.maxScrollExtent - position.pixels < 50) {
         this._index++;
-        this._getSearchArticle(_index, _key);
+        this._getWechatArticle(_index,widget.searchKey);
       }
+    });
+
+    if (widget.searchKey != '') {
+      _getWechatArticle(_index,widget.searchKey);
+    }
+  }
+
+  void _getWechatArticle(int index,String key) async {
+    Response response =
+        await ApiManager().searchArticle(index,key);
+    var article = HomeArticleBean.fromJson(response.data);
+    setState(() {
+      articles.addAll(article.data.datas);
     });
   }
 
-  void _getSearchArticle(int index, String key) async {
-    Response response = await ApiManager().searchArticle(index, key);
-    if(null!=response) {
-      var articleBean = SearchBean.fromJson(response.data);
-      setState(() {
-        articles.addAll(articleBean.data.datas);
-      });
-    }else{
-      articles.clear();
-    }
+  @override
+  void dispose() {
+    _loadmore.dispose();
+    super.dispose();
   }
 
   Widget createHomeArticleItem(Article article) {

@@ -9,8 +9,8 @@ class ApiManager {
   ApiManager._internal() {
     var options = BaseOptions(
         baseUrl: "https://www.wanandroid.com/",
-        connectTimeout: 10000,
-        receiveTimeout: 3000);
+        connectTimeout: 20000,
+        receiveTimeout: 10000);
     _dio = Dio(options);
   }
 
@@ -85,9 +85,14 @@ class ApiManager {
   }
 
   ///搜索关键字
-  Future<Response> searchArticle(int page) async {
+  Future<Response> searchArticle(int page,String key) async {
     try {
-      Response response = await _dio.get("article/query/${page}/json");
+
+      FormData formData = new FormData.from({
+        "k": "$key",
+      });
+
+      Response response = await _dio.post("article/query/${page}/json",data:formData);
       return response;
     } catch (e) {
       return null;
