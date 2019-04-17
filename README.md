@@ -47,8 +47,7 @@ API地址: http://www.wanandroid.com/blog/show/2
 
 
 ### 3、Apk下载体验
-[wanandroid.apk]([https://fir.im/p2lw](https://fir.im/p2lw)
-)
+[wanandroid.apk]([https://fir.im/p2lw](https://fir.im/p2lw)])
 ios版本直接去ios目录直接使用xcode编译运行
 
 ### 4、待后期更新：
