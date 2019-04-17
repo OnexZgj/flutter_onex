@@ -3,6 +3,7 @@
 A new Flutter application.
 
 
+
 ### 1、应用介绍:
 基于[WanAndroid](http://www.wanandroid.com/ "WanAndroid")开放[API](http://www.wanandroid.com/blog/show/2 "API")开发的技术文章阅读App。
 该应用程序是玩Android部分功能的flutter版本和干货网站部分api。
@@ -16,7 +17,6 @@ A new Flutter application.
 
 ### 2、功能包括
 - 首页文章展示
-
 ![image.png](https://upload-images.jianshu.io/upload_images/5249989-4e0a769ab1f60e33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ![首页.png](https://upload-images.jianshu.io/upload_images/5249989-959aa89eae2c39cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -47,8 +47,9 @@ API地址: http://www.wanandroid.com/blog/show/2
 
 
 ### 3、Apk下载体验
-[wanandroid.apk]([https://fir.im/p2lw](https://fir.im/p2lw)])
-ios版本直接去ios目录直接使用xcode编译运行
+[wanandroid.apk](https://fir.im/p2lw)
+
+Ios版本直接去ios目录直接使用xcode编译运行
 
 ### 4、待后期更新：
 - 登录注册功能
@@ -57,4 +58,10 @@ ios版本直接去ios目录直接使用xcode编译运行
 
 ### 5、项目地址:
 Github地址: [https://github.com/OnexZgj/flutter_onex](https://github.com/OnexZgj/flutter_onex)
+
+
+
+
+
+
 
